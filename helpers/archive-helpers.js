@@ -26,16 +26,14 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
-  fs.readFile(this.paths.list, 'utf8',  (err, data) => {
-  	if (err) {
-  	  console.log("yo there's an err", err);
-  	  throw err;
+  fs.readFile(exports.paths.list, function(err, sites) {
+    sites = sites.toString().split('\n');
+    if (callback) {
+      callback(sites);
     }
-    // console.log('over here!:', data.split(" "));
-    callback(data.split('\n'));
   });
-
 };
+
 
 exports.isUrlInList = function(url, callback) {
 	this.readListOfUrls( function(urls) {
@@ -45,16 +43,9 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-   fs.writeFile(this.paths.list, url, 'utf8', (err) => {
-    	if (err) { 
-    		throw err;
-    	}
-    	else { 
-	    	callback(url);
-        }
-    });
-
- 
+  fs.appendFile(exports.paths.list, url + '\n', function(err, file) {
+    callback();
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
